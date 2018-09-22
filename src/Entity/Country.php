@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CountryRepository")
@@ -20,6 +21,16 @@ class Country
      * @ORM\Column(type="string", length=50)
      */
     private $country;
+
+    /**
+     * Many Countries have Many Movies
+     * @ORM\ManyToMany(targetEntity="Movie", mappedBy="countries")
+     */
+    private $movies;
+
+    public function __construct() {
+        $this->movies = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {

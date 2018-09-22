@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\MovieRepository")
@@ -100,6 +101,49 @@ class Movie
      * @ORM\Column(type="string", length=300, nullable=true)
      */
     private $website_url;
+
+    /**
+     * Many Movies have Many Genres
+     * @ORM\ManyToMany(targetEntity="Genre", inversedBy="movies")
+     * @ORM\JoinTable(name="movies_genres")
+     */
+    private $genres;
+
+    /**
+     * Many Movies have Many Directors
+     * @ORM\ManyToMany(targetEntity="Director", inversedBy="movies")
+     * @ORM\JoinTable(name="movies_directors")
+     */
+    private $directors;
+
+    /**
+     * Many Movies have Many Writer
+     * @ORM\ManyToMany(targetEntity="Writer", inversedBy="movies")
+     * @ORM\JoinTable(name="movies_writers")
+     */
+    private $writers;
+
+    /**
+     * Many Movies have Many Languages
+     * @ORM\ManyToMany(targetEntity="Language", inversedBy="movies")
+     * @ORM\JoinTable(name="movies_languages")
+     */
+    private $languages;
+
+    /**
+     * Many Movies have Many Countries
+     * @ORM\ManyToMany(targetEntity="Country", inversedBy="movies")
+     * @ORM\JoinTable(name="movies_countries")
+     */
+    private $countries;
+
+    public function __construct() {
+        $this->genres = new ArrayCollection();
+        $this->directors = new ArrayCollection();
+        $this->writers = new ArrayCollection();
+        $this->languages = new ArrayCollection();
+        $this->countries = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {

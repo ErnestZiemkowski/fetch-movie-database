@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\LanguageRepository")
@@ -20,6 +22,16 @@ class Language
      * @ORM\Column(type="string", length=50)
      */
     private $language;
+
+    /**
+     * Many Languages have Many Movies
+     * @ORM\ManyToMany(targetEntity="Movie", mappedBy="languages")
+     */
+    private $movies;
+
+    public function __construct() {
+        $this->movies = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {

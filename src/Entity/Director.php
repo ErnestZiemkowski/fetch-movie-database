@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\DirectorRepository")
@@ -20,6 +21,18 @@ class Director
      * @ORM\Column(type="string", length=50)
      */
     private $director;
+
+
+    /**
+     * Many Directors have Many Movies
+     * @ORM\ManyToMany(targetEntity="Movie", mappedBy="directors")
+     */
+    private $movies;
+
+    public function __construct() {
+        $this->movies = new ArrayCollection();
+    }
+
 
     public function getId(): ?int
     {
