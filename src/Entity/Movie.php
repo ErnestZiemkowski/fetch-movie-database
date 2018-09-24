@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Genre;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -357,6 +358,13 @@ class Movie
     public function setWebsiteUrl(?string $website_url): self
     {
         $this->website_url = $website_url;
+
+        return $this;
+    }
+
+    public function addGenres(Genre $genres)
+    {
+        $this->genres[] = $genres;
 
         return $this;
     }

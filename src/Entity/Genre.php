@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Movie;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -45,6 +46,13 @@ class Genre
     public function setGenre(string $genre): self
     {
         $this->genre = $genre;
+
+        return $this;
+    }
+
+    public function addMovies(Movie $movies)
+    {
+        $this->movies = $movies;
 
         return $this;
     }

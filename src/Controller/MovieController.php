@@ -14,6 +14,12 @@ use JMS\Serializer\SerializerBuilder;
 
 class MovieController extends AbstractController
 {
+    private $serializer;
+
+    public function __construct() {
+        $this->serializer = SerializerBuilder::create()->build();
+    }
+
     /**
      * @Route("/movie", name="movie")
      */
@@ -41,49 +47,57 @@ class MovieController extends AbstractController
 
             if($resStatusCode === 200 && $resBodyType[0] === 'application/json; charset=utf-8') {
                 $body = json_decode($res->getBody());
-                // var_dump($body->Title);
-                // $year = (int)$body->Year;
-                // $body->imdbVotes = str_replace(',','', $body->imdbVotes);
-                $movie = new Movie();
-                $movie->setTitle($body->Title);
-                $movie->setYear(new DateTime($body->Year));
-                $movie->setRated($body->Rated);
-                $movie->setReleased(new DateTime($body->Released));
-                $movie->setRuntime($body->Runtime);
-                $movie->setPlot($body->Plot);
-                $movie->setAwards($body->Awards);
-                $movie->setPosterUrl($body->Poster);
-                $movie->setMetascore($body->Metascore);
-                $movie->setImdbRating($body->imdbRating);
-                $movie->setImdbVotes(str_replace(',','', $body->imdbVotes));
-                $movie->setImdbId($body->imdbID);
-                $movie->setType($body->Type);
-                $movie->setDvd(new DateTime($body->DVD));
-                $movie->setBoxOffice($body->BoxOffice);
-                $movie->setProduction($body->Production);
-                $movie->setWebsiteUrl($body->Website);
+                try {
+                    $movie = new Movie();
+                    $movie->setTitle($body->Title);
+                    $movie->setYear(new DateTime($body->Year));
+                    $movie->setRated($body->Rated);
+                    $movie->setReleased(new DateTime($body->Released));
+                    $movie->setRuntime($body->Runtime);
+                    $movie->setPlot($body->Plot);
+                    $movie->setAwards($body->Awards);
+                    $movie->setPosterUrl($body->Poster);
+                    $movie->setMetascore($body->Metascore);
+                    $movie->setImdbRating($body->imdbRating);
+                    $movie->setImdbVotes(str_replace(',','', $body->imdbVotes));
+                    $movie->setImdbId($body->imdbID);
+                    $movie->setType($body->Type);
+                    $movie->setDvd(new DateTime($body->DVD));
+                    $movie->setBoxOffice($body->BoxOffice);
+                    $movie->setProduction($body->Production);
+                    $movie->setWebsiteUrl($body->Website);
+    
 
-                $entityManager = $this
-                    ->getDoctrine()
-                    ->getManager();
+                    
 
-                $entityManager->persist($movie);
-                $entityManager->flush();
 
-                // return $this->json([
-                //     'message' => 'Movie saved to database!',
-                //     'movie' => (array)$movie
-                // ]);
+                    $entityManager = $this
+                        ->getDoctrine()
+                        ->getManager();
 
-                $serializer = SerializerBuilder::create()->build();
-                $serializedEntity = $serializer->serialize($movie, 'json');
-                return new Response($serializedEntity);
 
+    
+                    $entityManager->persist($movie);
+                    $entityManager->flush();
+    
+                    $serializedEntity = $this
+                        ->serializer
+                        ->serialize($movie, 'json');
+
+                    return new Response($serializedEntity);
+
+                } catch(\Exception $e) {
+                    throw $e;
+                }
             } else {
-                return $this->json(['message'  => 'Given movie title does not exist in external OMDB API database!']);                
+                return $this->json([
+                    'message'  => 'Given movie title does not exist in external OMDB API database!'
+                ]);                
             }
         } else {
-            return $this->json(['message'  => 'Required valid title parameter in body!']);
+            return $this->json([
+                'message'  => 'Required valid title parameter in body!'
+            ]);
         }
     }
 
