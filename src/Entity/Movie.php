@@ -105,10 +105,10 @@ class Movie
 
     /**
      * Many Movies have Many Genres
-     * @ORM\ManyToMany(targetEntity="Genre", inversedBy="movies")
+     * @ORM\ManyToMany(targetEntity="Genre", inversedBy="movie")
      * @ORM\JoinTable(name="movies_genres")
      */
-    private $genres;
+    private $genre;
 
     /**
      * Many Movies have Many Directors
@@ -145,7 +145,7 @@ class Movie
     private $movieRatings;
 
     public function __construct() {
-        $this->genres = new ArrayCollection();
+        $this->genre = new ArrayCollection();
         $this->directors = new ArrayCollection();
         $this->writers = new ArrayCollection();
         $this->languages = new ArrayCollection();
@@ -362,9 +362,9 @@ class Movie
         return $this;
     }
 
-    public function addGenres(Genre $genres)
+    public function setGenre(Genre $genre)
     {
-        $this->genres[] = $genres;
+        $this->genre[] = $genre;
 
         return $this;
     }

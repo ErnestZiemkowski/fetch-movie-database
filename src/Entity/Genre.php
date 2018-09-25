@@ -25,12 +25,12 @@ class Genre
 
     /**
      * Many Genres have Many Movies
-     * @ORM\ManyToMany(targetEntity="Movie", mappedBy="genres")
+     * @ORM\ManyToMany(targetEntity="Movie", mappedBy="genre")
      */
-    private $movies;
+    private $movie;
 
     public function __construct() {
-        $this->movies = new ArrayCollection();
+        $this->movie = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -50,9 +50,9 @@ class Genre
         return $this;
     }
 
-    public function addMovies(Movie $movies)
+    public function setMovie(Movie $movie)
     {
-        $this->movies = $movies;
+        $this->movie[] = $movie;
 
         return $this;
     }

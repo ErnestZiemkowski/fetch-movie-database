@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Movie;
+use App\Entity\Genre;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -48,44 +49,73 @@ class MovieController extends AbstractController
             if($resStatusCode === 200 && $resBodyType[0] === 'application/json; charset=utf-8') {
                 $body = json_decode($res->getBody());
                 try {
-                    $movie = new Movie();
-                    $movie->setTitle($body->Title);
-                    $movie->setYear(new DateTime($body->Year));
-                    $movie->setRated($body->Rated);
-                    $movie->setReleased(new DateTime($body->Released));
-                    $movie->setRuntime($body->Runtime);
-                    $movie->setPlot($body->Plot);
-                    $movie->setAwards($body->Awards);
-                    $movie->setPosterUrl($body->Poster);
-                    $movie->setMetascore($body->Metascore);
-                    $movie->setImdbRating($body->imdbRating);
-                    $movie->setImdbVotes(str_replace(',','', $body->imdbVotes));
-                    $movie->setImdbId($body->imdbID);
-                    $movie->setType($body->Type);
-                    $movie->setDvd(new DateTime($body->DVD));
-                    $movie->setBoxOffice($body->BoxOffice);
-                    $movie->setProduction($body->Production);
-                    $movie->setWebsiteUrl($body->Website);
-    
-
-                    
-
-
-                    $entityManager = $this
+                    $movie = $this
                         ->getDoctrine()
-                        ->getManager();
+                        ->getRepository(Movie::class)
+                        ->findOneBy(array('title' => $body->Title));
 
-
+                    if(!$movie instanceof Movie)
+                    {
+                        $movie = new Movie();
+                        $movie->setTitle($body->Title);
+                        $movie->setYear(new DateTime($body->Year));
+                        $movie->setRated($body->Rated);
+                        $movie->setReleased(new DateTime($body->Released));
+                        $movie->setRuntime($body->Runtime);
+                        $movie->setPlot($body->Plot);
+                        $movie->setAwards($body->Awards);
+                        $movie->setPosterUrl($body->Poster);
+                        $movie->setMetascore($body->Metascore);
+                        $movie->setImdbRating($body->imdbRating);
+                        $movie->setImdbVotes(str_replace(',','', $body->imdbVotes));
+                        $movie->setImdbId($body->imdbID);
+                        $movie->setType($body->Type);
+                        $movie->setDvd(new DateTime($body->DVD));
+                        $movie->setBoxOffice($body->BoxOffice);
+                        $movie->setProduction($body->Production);
+                        $movie->setWebsiteUrl($body->Website);
     
-                    $entityManager->persist($movie);
-                    $entityManager->flush();
+                        $entityManager = $this
+                            ->getDoctrine()
+                            ->getManager();
     
+                        $genres = explode(', ', $body->Genre);    
+                        
+                        foreach($genres as $genre)
+                        {
+                            $genreEntity = $this
+                                ->getDoctrine()
+                                ->getRepository(Genre::class)
+                                ->findOneBy(array('genre' => $genre));
+                            
+                            if(!$genreEntity instanceof Genre)
+                            {
+                                $genreEntity = new Genre();
+                                $genreEntity->setGenre($genre);
+                                $genreEntity->setMovie($movie);
+                                $entityManager->persist($genreEntity);
+                                $entityManager->persist($movie);
+                            }
+                            $movie->setGenre($genreEntity);
+                            $genreEntity->setMovie($movie);
+                            $entityManager->persist($genreEntity);
+                            $entityManager->persist($movie);
+                        }
+                        $entityManager->flush();
+        
+                        $serializedEntity = $this
+                            ->serializer
+                            ->serialize($movie, 'json');
+    
+                        return new Response($serializedEntity);
+    
+                    }
                     $serializedEntity = $this
-                        ->serializer
-                        ->serialize($movie, 'json');
+                    ->serializer
+                    ->serialize($movie, 'json');
 
                     return new Response($serializedEntity);
-
+    
                 } catch(\Exception $e) {
                     throw $e;
                 }
@@ -100,6 +130,4 @@ class MovieController extends AbstractController
             ]);
         }
     }
-
-
 }
