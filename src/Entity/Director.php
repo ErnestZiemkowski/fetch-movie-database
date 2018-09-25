@@ -22,12 +22,11 @@ class Director
      */
     private $director;
 
-
     /**
      * Many Directors have Many Movies
-     * @ORM\ManyToMany(targetEntity="Movie", mappedBy="directors")
+     * @ORM\ManyToMany(targetEntity="Movie", mappedBy="director")
      */
-    private $movies;
+    private $movie;
 
     public function __construct() {
         $this->movies = new ArrayCollection();
@@ -47,6 +46,13 @@ class Director
     public function setDirector(string $director): self
     {
         $this->director = $director;
+
+        return $this;
+    }
+
+    public function setMovie(Movie $movie)
+    {
+        $this->movie[] = $movie;
 
         return $this;
     }

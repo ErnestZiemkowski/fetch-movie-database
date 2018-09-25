@@ -112,10 +112,10 @@ class Movie
 
     /**
      * Many Movies have Many Directors
-     * @ORM\ManyToMany(targetEntity="Director", inversedBy="movies")
+     * @ORM\ManyToMany(targetEntity="Director", inversedBy="movie")
      * @ORM\JoinTable(name="movies_directors")
      */
-    private $directors;
+    private $director;
 
     /**
      * Many Movies have Many Writer
@@ -365,6 +365,13 @@ class Movie
     public function setGenre(Genre $genre)
     {
         $this->genre[] = $genre;
+
+        return $this;
+    }
+
+    public function setDirector(Director $director)
+    {
+        $this->director[] = $director;
 
         return $this;
     }

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Movie;
 use App\Entity\Genre;
+use App\Entity\Director;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -101,6 +102,30 @@ class MovieController extends AbstractController
                             $entityManager->persist($genreEntity);
                             $entityManager->persist($movie);
                         }
+
+                        $directors = explode(', ', $body->Director);
+
+                        foreach($directors as $director)
+                        {
+                            $directorEntity = $this
+                                ->getDoctrine()
+                                ->getRepository(Director::class)
+                                ->findOneBy(array('director' => $director));
+
+                            if(!$directorEntity instanceof Director)
+                            {
+                                $directorEntity = new Director();
+                                $directorEntity->setDirector($director);
+                                $directorEntity->setMovie($movie);
+                                $entityManager->persist($directorEntity);
+                                $entityManager->persist($movie);
+                            }    
+                            $movie->setDirector($directorEntity);
+                            $directorEntity->setMovie($movie);
+                            $entityManager->persist($directorEntity);
+                            $entityManager->persist($movie);
+                        }
+
                         $entityManager->flush();
         
                         $serializedEntity = $this
