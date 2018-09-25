@@ -24,12 +24,12 @@ class Country
 
     /**
      * Many Countries have Many Movies
-     * @ORM\ManyToMany(targetEntity="Movie", mappedBy="countries")
+     * @ORM\ManyToMany(targetEntity="Movie", mappedBy="country")
      */
-    private $movies;
+    private $movie;
 
     public function __construct() {
-        $this->movies = new ArrayCollection();
+        $this->movie = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -45,6 +45,13 @@ class Country
     public function setCountry(string $country): self
     {
         $this->country = $country;
+
+        return $this;
+    }
+
+    public function setMovie(Movie $movie)
+    {
+        $this->movie[] = $movie;
 
         return $this;
     }

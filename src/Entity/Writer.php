@@ -24,12 +24,12 @@ class Writer
 
     /**
      * Many Writers have Many Movies
-     * @ORM\ManyToMany(targetEntity="Movie", mappedBy="writers")
+     * @ORM\ManyToMany(targetEntity="Movie", mappedBy="writer")
      */
-    private $movies;
+    private $movie;
 
     public function __construct() {
-        $this->movies = new ArrayCollection();
+        $this->movie = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -48,4 +48,12 @@ class Writer
 
         return $this;
     }
+
+    public function setMovie(Movie $movie)
+    {
+        $this->movie[] = $movie;
+
+        return $this;
+    }
+
 }

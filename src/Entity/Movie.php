@@ -119,38 +119,38 @@ class Movie
 
     /**
      * Many Movies have Many Writer
-     * @ORM\ManyToMany(targetEntity="Writer", inversedBy="movies")
+     * @ORM\ManyToMany(targetEntity="Writer", inversedBy="movie")
      * @ORM\JoinTable(name="movies_writers")
      */
-    private $writers;
+    private $writer;
 
     /**
      * Many Movies have Many Languages
-     * @ORM\ManyToMany(targetEntity="Language", inversedBy="movies")
+     * @ORM\ManyToMany(targetEntity="Language", inversedBy="movie")
      * @ORM\JoinTable(name="movies_languages")
      */
-    private $languages;
+    private $language;
 
     /**
      * Many Movies have Many Countries
-     * @ORM\ManyToMany(targetEntity="Country", inversedBy="movies")
+     * @ORM\ManyToMany(targetEntity="Country", inversedBy="movie")
      * @ORM\JoinTable(name="movies_countries")
      */
-    private $countries;
+    private $country;
 
     /**
      * One Movie has Many MovieRating
      * @ORM\OneToMany(targetEntity="MovieRating", mappedBy="movie")
      */
-    private $movieRatings;
+    private $movieRating;
 
     public function __construct() {
         $this->genre = new ArrayCollection();
-        $this->directors = new ArrayCollection();
-        $this->writers = new ArrayCollection();
-        $this->languages = new ArrayCollection();
-        $this->countries = new ArrayCollection();
-        $this->movieRatings = new ArrayCollection();
+        $this->director = new ArrayCollection();
+        $this->writer = new ArrayCollection();
+        $this->language = new ArrayCollection();
+        $this->country = new ArrayCollection();
+        $this->movieRating = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -372,6 +372,27 @@ class Movie
     public function setDirector(Director $director)
     {
         $this->director[] = $director;
+
+        return $this;
+    }
+
+    public function setWriter(Writer $writer)
+    {
+        $this->writer[] = $writer;
+
+        return $this;
+    }
+
+    public function setLanguage(Language $language)
+    {
+        $this->language[] = $language;
+
+        return $this;
+    }
+
+    public function setCountry(Country $country)
+    {
+        $this->country[] = $country;
 
         return $this;
     }

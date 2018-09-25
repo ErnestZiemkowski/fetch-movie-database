@@ -25,9 +25,9 @@ class Language
 
     /**
      * Many Languages have Many Movies
-     * @ORM\ManyToMany(targetEntity="Movie", mappedBy="languages")
+     * @ORM\ManyToMany(targetEntity="Movie", mappedBy="language")
      */
-    private $movies;
+    private $movie;
 
     public function __construct() {
         $this->movies = new ArrayCollection();
@@ -49,4 +49,12 @@ class Language
 
         return $this;
     }
+
+    public function setMovie(Movie $movie)
+    {
+        $this->movie[] = $movie;
+
+        return $this;
+    }
+
 }

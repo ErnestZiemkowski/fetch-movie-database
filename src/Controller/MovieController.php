@@ -5,6 +5,9 @@ namespace App\Controller;
 use App\Entity\Movie;
 use App\Entity\Genre;
 use App\Entity\Director;
+use App\Entity\Language;
+use App\Entity\Country;
+use App\Entity\Writer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -126,6 +129,72 @@ class MovieController extends AbstractController
                             $entityManager->persist($movie);
                         }
 
+                        $writers = explode(', ', $body->Writer);
+
+                        foreach($writers as $writer)
+                        {
+                            $writerEntity = $this
+                                ->getDoctrine()
+                                ->getRepository(Writer::class)
+                                ->findOneBy(array('writer' => $writer));
+                            if(!$writerEntity instanceof Writer)
+                            {
+                                $writerEntity = new Writer();
+                                $writerEntity->setWriter($writer);
+                                $writerEntity->setMovie($movie);
+                                $entityManager->persist($writerEntity);
+                                $entityManager->persist($movie);
+                            }
+                            $movie->setWriter($writerEntity);
+                            $writerEntity->setMovie($movie);
+                            $entityManager->persist($writerEntity);
+                            $entityManager->persist($movie);
+                        }
+
+                        $languages = explode(', ', $body->Language);
+
+                        foreach($languages as $language)
+                        {
+                            $languageEntity = $this
+                                ->getDoctrine()
+                                ->getRepository(Language::class)
+                                ->findOneBy(array('language' => $language));
+                            if(!$languageEntity instanceof Language)
+                            {
+                                $languageEntity = new Language();
+                                $languageEntity->setLanguage($language);
+                                $languageEntity->setMovie($movie);
+                                $entityManager->persist($languageEntity);
+                                $entityManager->persist($movie);
+                            }
+                            $movie->setLanguage($languageEntity);
+                            $languageEntity->setMovie($movie);
+                            $entityManager->persist($languageEntity);
+                            $entityManager->persist($movie);
+                        }
+
+                        $countries = explode(', ', $body->Country);
+
+                        foreach($countries as $country)
+                        {
+                            $countryEntity = $this
+                                ->getDoctrine()
+                                ->getRepository(Country::class)
+                                ->findOneBy(array('country' => $country));
+                            if(!$countryEntity instanceof Country)
+                            {
+                                $countryEntity = new Country();
+                                $countryEntity->setCountry($country);
+                                $countryEntity->setMovie($movie);
+                                $entityManager->persist($countryEntity);
+                                $entityManager->persist($movie);
+                            }
+                            $movie->setCountry($countryEntity);
+                            $countryEntity->setMovie($movie);
+                            $entityManager->persist($countryEntity);
+                            $entityManager->persist($movie);
+                        }
+
                         $entityManager->flush();
         
                         $serializedEntity = $this
@@ -136,8 +205,8 @@ class MovieController extends AbstractController
     
                     }
                     $serializedEntity = $this
-                    ->serializer
-                    ->serialize($movie, 'json');
+                        ->serializer
+                        ->serialize($movie, 'json');
 
                     return new Response($serializedEntity);
     

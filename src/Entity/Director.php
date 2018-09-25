@@ -29,7 +29,7 @@ class Director
     private $movie;
 
     public function __construct() {
-        $this->movies = new ArrayCollection();
+        $this->movie = new ArrayCollection();
     }
 
 
