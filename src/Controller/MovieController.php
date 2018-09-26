@@ -8,6 +8,8 @@ use App\Entity\Director;
 use App\Entity\Language;
 use App\Entity\Country;
 use App\Entity\Writer;
+use App\Entity\Rating;
+use App\Entity\MovieRating;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -98,12 +100,10 @@ class MovieController extends AbstractController
                                 $genreEntity->setGenre($genre);
                                 $genreEntity->setMovie($movie);
                                 $entityManager->persist($genreEntity);
-                                $entityManager->persist($movie);
                             }
                             $movie->setGenre($genreEntity);
                             $genreEntity->setMovie($movie);
                             $entityManager->persist($genreEntity);
-                            $entityManager->persist($movie);
                         }
 
                         $directors = explode(', ', $body->Director);
@@ -121,12 +121,10 @@ class MovieController extends AbstractController
                                 $directorEntity->setDirector($director);
                                 $directorEntity->setMovie($movie);
                                 $entityManager->persist($directorEntity);
-                                $entityManager->persist($movie);
                             }    
                             $movie->setDirector($directorEntity);
                             $directorEntity->setMovie($movie);
                             $entityManager->persist($directorEntity);
-                            $entityManager->persist($movie);
                         }
 
                         $writers = explode(', ', $body->Writer);
@@ -143,12 +141,10 @@ class MovieController extends AbstractController
                                 $writerEntity->setWriter($writer);
                                 $writerEntity->setMovie($movie);
                                 $entityManager->persist($writerEntity);
-                                $entityManager->persist($movie);
                             }
                             $movie->setWriter($writerEntity);
                             $writerEntity->setMovie($movie);
                             $entityManager->persist($writerEntity);
-                            $entityManager->persist($movie);
                         }
 
                         $languages = explode(', ', $body->Language);
@@ -165,12 +161,10 @@ class MovieController extends AbstractController
                                 $languageEntity->setLanguage($language);
                                 $languageEntity->setMovie($movie);
                                 $entityManager->persist($languageEntity);
-                                $entityManager->persist($movie);
                             }
                             $movie->setLanguage($languageEntity);
                             $languageEntity->setMovie($movie);
                             $entityManager->persist($languageEntity);
-                            $entityManager->persist($movie);
                         }
 
                         $countries = explode(', ', $body->Country);
@@ -187,14 +181,36 @@ class MovieController extends AbstractController
                                 $countryEntity->setCountry($country);
                                 $countryEntity->setMovie($movie);
                                 $entityManager->persist($countryEntity);
-                                $entityManager->persist($movie);
                             }
                             $movie->setCountry($countryEntity);
                             $countryEntity->setMovie($movie);
                             $entityManager->persist($countryEntity);
-                            $entityManager->persist($movie);
                         }
 
+                        foreach($body->Ratings as $rating)
+                        {
+                            $ratingEntity = $this
+                                ->getDoctrine()
+                                ->getRepository(Rating::class)
+                                ->findOneBy(array('source' => $rating->Source));
+                            if(!$ratingEntity instanceof Rating)
+                            {
+                                $ratingEntity = new Rating();
+                                $ratingEntity->setSource($rating->Source);
+                                $movieRatingEntity = new MovieRating();
+                                $movieRatingEntity->setValue($rating->Value);
+                                $movieRatingEntity->setMovie($movie);
+                                $movieRatingEntity->setRating($ratingEntity);
+                                $entityManager->persist($ratingEntity);
+                                $entityManager->persist($movieRatingEntity);
+                            }    
+                            $movieRatingEntity = new MovieRating();
+                            $movieRatingEntity->setValue($rating->Value);
+                            $movieRatingEntity->setMovie($movie);
+                            $movieRatingEntity->setRating($ratingEntity);
+                            $entityManager->persist($movieRatingEntity);
+                        }
+                        $entityManager->persist($movie);
                         $entityManager->flush();
         
                         $serializedEntity = $this

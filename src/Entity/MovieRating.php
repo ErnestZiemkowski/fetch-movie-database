@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Movie;
+use App\Entity\Rating;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -49,6 +51,20 @@ class MovieRating
     public function setValue(string $value): self
     {
         $this->value = $value;
+
+        return $this;
+    }
+
+    public function setMovie(Movie $movie)
+    {
+        $this->movie = $movie;
+
+        return $this;
+    }
+
+    public function setRating(Rating $rating)
+    {
+        $this->rating = $rating;
 
         return $this;
     }

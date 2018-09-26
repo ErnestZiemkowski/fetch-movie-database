@@ -25,9 +25,9 @@ class Genre
 
     /**
      * Many Genres have Many Movies
-     * @ORM\ManyToMany(targetEntity="Movie", mappedBy="genre")
+     * @ORM\ManyToMany(targetEntity="Movie", mappedBy="genres")
      */
-    private $movie;
+    private $movies;
 
     public function __construct() {
         $this->movie = new ArrayCollection();
@@ -52,7 +52,7 @@ class Genre
 
     public function setMovie(Movie $movie)
     {
-        $this->movie[] = $movie;
+        $this->movies[] = $movie;
 
         return $this;
     }

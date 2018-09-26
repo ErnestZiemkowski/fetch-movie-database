@@ -24,9 +24,9 @@ class Writer
 
     /**
      * Many Writers have Many Movies
-     * @ORM\ManyToMany(targetEntity="Movie", mappedBy="writer")
+     * @ORM\ManyToMany(targetEntity="Movie", mappedBy="writers")
      */
-    private $movie;
+    private $movies;
 
     public function __construct() {
         $this->movie = new ArrayCollection();
@@ -51,7 +51,7 @@ class Writer
 
     public function setMovie(Movie $movie)
     {
-        $this->movie[] = $movie;
+        $this->movies[] = $movie;
 
         return $this;
     }

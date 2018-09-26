@@ -105,38 +105,38 @@ class Movie
 
     /**
      * Many Movies have Many Genres
-     * @ORM\ManyToMany(targetEntity="Genre", inversedBy="movie")
+     * @ORM\ManyToMany(targetEntity="Genre", inversedBy="movies")
      * @ORM\JoinTable(name="movies_genres")
      */
-    private $genre;
+    private $genres;
 
     /**
      * Many Movies have Many Directors
-     * @ORM\ManyToMany(targetEntity="Director", inversedBy="movie")
+     * @ORM\ManyToMany(targetEntity="Director", inversedBy="movies")
      * @ORM\JoinTable(name="movies_directors")
      */
-    private $director;
+    private $directors;
 
     /**
      * Many Movies have Many Writer
-     * @ORM\ManyToMany(targetEntity="Writer", inversedBy="movie")
+     * @ORM\ManyToMany(targetEntity="Writer", inversedBy="movies")
      * @ORM\JoinTable(name="movies_writers")
      */
-    private $writer;
+    private $writers;
 
     /**
      * Many Movies have Many Languages
-     * @ORM\ManyToMany(targetEntity="Language", inversedBy="movie")
+     * @ORM\ManyToMany(targetEntity="Language", inversedBy="movies")
      * @ORM\JoinTable(name="movies_languages")
      */
-    private $language;
+    private $languages;
 
     /**
      * Many Movies have Many Countries
-     * @ORM\ManyToMany(targetEntity="Country", inversedBy="movie")
+     * @ORM\ManyToMany(targetEntity="Country", inversedBy="movies")
      * @ORM\JoinTable(name="movies_countries")
      */
-    private $country;
+    private $countries;
 
     /**
      * One Movie has Many MovieRating
@@ -145,11 +145,11 @@ class Movie
     private $movieRating;
 
     public function __construct() {
-        $this->genre = new ArrayCollection();
-        $this->director = new ArrayCollection();
-        $this->writer = new ArrayCollection();
-        $this->language = new ArrayCollection();
-        $this->country = new ArrayCollection();
+        $this->genres = new ArrayCollection();
+        $this->directors = new ArrayCollection();
+        $this->writers = new ArrayCollection();
+        $this->languages = new ArrayCollection();
+        $this->countries = new ArrayCollection();
         $this->movieRating = new ArrayCollection();
     }
 
@@ -364,35 +364,35 @@ class Movie
 
     public function setGenre(Genre $genre)
     {
-        $this->genre[] = $genre;
+        $this->genres[] = $genre;
 
         return $this;
     }
 
     public function setDirector(Director $director)
     {
-        $this->director[] = $director;
+        $this->directors[] = $director;
 
         return $this;
     }
 
     public function setWriter(Writer $writer)
     {
-        $this->writer[] = $writer;
+        $this->writers[] = $writer;
 
         return $this;
     }
 
     public function setLanguage(Language $language)
     {
-        $this->language[] = $language;
+        $this->languages[] = $language;
 
         return $this;
     }
 
     public function setCountry(Country $country)
     {
-        $this->country[] = $country;
+        $this->countries[] = $country;
 
         return $this;
     }
