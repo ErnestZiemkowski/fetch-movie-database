@@ -28,14 +28,20 @@ class MovieController extends AbstractController
     }
 
     /**
-     * @Route("/movie", name="movie")
+     * @Route("/movies", name="get_movies")
      */
     public function index()
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/MovieController.php',
-        ]);
+        $movies = $this
+            ->getDoctrine()
+            ->getRepository(Movie::class)
+            ->findAll();
+
+        $serializedEntities = $this
+            ->serializer
+            ->serialize($movies, 'json');
+
+        return new Response($serializedEntities);
     }
 
     /**
@@ -240,4 +246,7 @@ class MovieController extends AbstractController
             ]);
         }
     }
+
+
+
 }
