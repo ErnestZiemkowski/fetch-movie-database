@@ -246,7 +246,4 @@ class MovieController extends AbstractController
             ]);
         }
     }
-
-
-
 }

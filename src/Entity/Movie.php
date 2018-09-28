@@ -144,6 +144,12 @@ class Movie
      */
     private $movieRating;
 
+    /**
+     * One Movie has Many Comments
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="movie")
+     */
+    private $comments;
+
     public function __construct() {
         $this->genres = new ArrayCollection();
         $this->directors = new ArrayCollection();
@@ -151,6 +157,7 @@ class Movie
         $this->languages = new ArrayCollection();
         $this->countries = new ArrayCollection();
         $this->movieRating = new ArrayCollection();
+        $this->comment = new ArrayCollection();
     }
 
     public function getId(): ?int
