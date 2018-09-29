@@ -2,22 +2,22 @@
 
 namespace App\Controller;
 
+use \DateTime;
+use GuzzleHttp\Client;
 use App\Entity\Movie;
 use App\Entity\Genre;
-use App\Entity\Director;
-use App\Entity\Language;
-use App\Entity\Country;
 use App\Entity\Writer;
 use App\Entity\Rating;
+use App\Entity\Country;
+use App\Entity\Language;
+use App\Entity\Director;
 use App\Entity\MovieRating;
+use JMS\Serializer\SerializerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use GuzzleHttp\Client;
-use \DateTime;
-use JMS\Serializer\SerializerBuilder;
 
 class MovieController extends AbstractController
 {
@@ -30,7 +30,7 @@ class MovieController extends AbstractController
     /**
      * @Route("/movies", name="get_movies")
      */
-    public function index()
+    public function getMovies()
     {
         $movies = $this
             ->getDoctrine()
@@ -47,7 +47,7 @@ class MovieController extends AbstractController
     /**
      * @Route("/movie/new", name="new_movie")
      */
-    public function new(Request $request)
+    public function createMovie(Request $request)
     {
         $title = $request->request->get('title');
 

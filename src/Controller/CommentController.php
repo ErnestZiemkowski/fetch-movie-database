@@ -2,15 +2,15 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use \DateTime;
 use App\Entity\Movie;
 use App\Entity\Comment;
+use JMS\Serializer\SerializerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use \DateTime;
-use JMS\Serializer\SerializerBuilder;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CommentController extends AbstractController
 {
@@ -22,19 +22,44 @@ class CommentController extends AbstractController
     }
 
     /**
-     * @Route("/comment", name="comment")
+     * @Route("/comments", name="get_all_comments")
      */
-    public function index()
+    public function getComments()
     {
-        return $this->render('comment/index.html.twig', [
-            'controller_name' => 'CommentController',
-        ]);
+        $comments = $this
+            ->getDoctrine()
+            ->getRepository(Comment::class)
+            ->findAll();
+        
+        $serializedEntities = $this
+            ->serializer
+            ->serialize($comments, 'json');
+
+        return new Response($serializedEntities);
+    }
+
+    /**
+     * @Route("/comments/{movieId}", name="get_comments_by_movie_ID")
+     */
+    public function getCommentsByMovieId($movieId)
+    {
+        var_dump('dupa');
+        $comments = $this
+            ->getDoctrine()
+            ->getRepository(Comment::class)
+            ->findBy(array('movie' => $movieId));
+
+        $serializedEntities = $this
+            ->serializer
+            ->serialize($comments, 'json');
+
+        return new Response($serializedEntities);
     }
 
     /**
      * @Route("/comment/new", name="new_comment")
      */
-    public function new(Request $request)
+    public function createComment(Request $request)
     {
         $movieId = $request->request->get('movie_id');
         $commentContent = $request->request->get('content');
